@@ -1,73 +1,71 @@
-# frontend
+# Business registration system
 
-This template should help get you started developing with Vue 3 in Vite.
+The business registration system is a web platform design for business consultants to manage client business registration requests, document collection, and internal review workflows through a structured, role-based process
 
-## Recommended IDE Setup
+# Current features
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+ATHENTICATION
+- Login
+- Signup
+- Role-base authorization
+- Session persistence
 
-## Recommended Browser Setup
+CLIENT
+- Profile management
+- Submit business registration request
+- Upload supporting documents
+- View request history
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+STAFF
+- Review assign requests
+- Update request status
+- Manage business registrations
 
-## Type Support for `.vue` Imports in TS
+SYSTEM
+- Supabase authentication
+- Row level security
+- Global error handling
+- Retry logic
+- Offline profile caching
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+# Tech Stack
 
-## Customize configuration
+FRONTEND
+- Vue 3
+- Typescript
+- Pinia
+- Vue router
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+BACKEND SERVICES
+- Supabase
+- PostgreSQL
+- Cloudinary
 
-## Project Setup
+ARCHITECTURE
+- Domain-Driven-Design (DDD-Lite)
+- Repository pattern
+- Use cases
+- Clean architecture
 
-```sh
-npm install
-```
+# Architecture Diagram (in progress)
 
-### Compile and Hot-Reload for Development
+Presentation
+    |
+Application (use cases)
+    |
+Domain (entities + repositories)
+    |
+Infrastructure (supabase/cloudinary)
 
-```sh
-npm run dev
-```
+# Project Status
 
-### Type-Check, Compile and Minify for Production
+current version (v0.1.0)
 
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Run End-to-End Tests with [Playwright](https://playwright.dev)
-
-```sh
-# Install browsers for the first run
-npx playwright install
-
-# When testing on CI, must build the project first
-npm run build
-
-# Runs the end-to-end tests
-npm run test:e2e
-# Runs the tests only on Chromium
-npm run test:e2e -- --project=chromium
-# Runs the tests of a specific file
-npm run test:e2e -- tests/example.spec.ts
-# Runs the tests in debug mode
-npm run test:e2e -- --debug
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+[*] Authentication
+[*] Business requests
+[*] Error handling
+[*] Design system
+[ ] Staff dashboard
+[ ] Email notifications
+[ ] Change password
+[ ] Change email
