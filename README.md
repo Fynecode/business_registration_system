@@ -49,20 +49,20 @@ ARCHITECTURE
 
 # Architecture Diagram (in progress)
 
-Presentation ->
-Application (use cases) ->
-Domain (entities + repositories) ->
+Presentation ➡
+Application (use cases) ➡
+Domain (entities + repositories) ➡
 Infrastructure (supabase/cloudinary)
 
 # Project Status
 
 current version (v0.1.0)
 
-[x] Authentication
-[x] Business requests
-[x] Error handling
-[x] Design system
-[ ] Staff dashboard
-[ ] Email notifications
-[ ] Change password
-[ ] Change email
+✔ Authentication
+✔ Business requests
+✔ Error handling
+✔ Design system
+🚧 Staff dashboard
+🚧 Email notifications
+🚧 Change password
+🚧 Change email
