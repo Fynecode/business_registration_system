@@ -58,11 +58,11 @@ Infrastructure (supabase/cloudinary)
 
 current version (v0.1.0)
 
-✔ Authentication
-✔ Business requests
-✔ Error handling
-✔ Design system
-🚧 Staff dashboard
-🚧 Email notifications
-🚧 Change password
-🚧 Change email
+- ✔ Authentication
+- ✔ Business requests
+- ✔ Error handling
+- ✔ Design system
+- 🚧 Staff dashboard
+- 🚧 Email notifications
+- 🚧 Change password
+- 🚧 Change email
