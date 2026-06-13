@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #000003;
+}
+
+.colors{
+    background-color: #000003;
+}
+
+/* LAYOUTS */
+
+/* Page */
+.page-container {
+  @apply min-h-screen bg-[#f6f2eb] pl-20 text-stone-950;
+}
+
+.page-content {
+  @apply mx-auto w-full max-w-7xl px-5 py-6 sm:px-8 lg:px-10;
+}
+
+/* Sections */
+
+.section-card {
+  @apply rounded-[2rem] bg-white p-6 shadow-xl shadow-stone-300/40;
+}
+
+.section-card-sm {
+  @apply rounded-[1.5rem] bg-white p-4 shadow-lg shadow-stone-300/30;
+}
+
+/* Hero */
+
+.hero-card {
+  @apply overflow-hidden rounded-[2rem] bg-[#183d36] p-6 text-white shadow-xl shadow-emerald-950/20;
+}
+
+/* Empty state */
+
+.empty-state {
+  @apply rounded-[1.5rem] border border-dashed border-stone-300 bg-stone-50 px-5 py-10 text-center;
+}
+
+/* BUTTONS */
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold transition;
+}
+
+.btn-primary {
+  @apply bg-emerald-900 text-white hover:bg-emerald-800;
+}
+
+.btn-secondary {
+  @apply bg-white text-stone-900 hover:bg-stone-100;
+}
+
+.btn-icon {
+  @apply flex h-10 w-10 items-center justify-center rounded-full transition;
+}
+
+.btn-icon-dark {
+  @apply border border-white/15 bg-white/10 hover:bg-white/20;
+}
+
+.btn-icon-light {
+  @apply border border-stone-200 bg-stone-50 hover:border-emerald-200 hover:bg-emerald-50;
+}
+
+.btn-pill {
+  @apply rounded-full px-3 py-1 text-xs font-bold;
+}
+
+/* CARDS */
+
+.dashboard-card {
+  @apply rounded-[2rem] bg-white p-6 shadow-xl shadow-stone-300/40;
+}
+
+.dashboard-card-hover {
+  @apply rounded-[2rem] bg-white p-6 shadow-xl shadow-stone-300/40 transition hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-stone-300/60;
+}
+
+.list-card {
+  @apply rounded-[1.5rem] border border-stone-100 bg-stone-50 p-4 transition;
+}
+
+.list-card-hover {
+  @apply rounded-[1.5rem] border border-stone-100 bg-stone-50 p-4 transition hover:border-emerald-100 hover:bg-emerald-50/50;
+}
+
+/* BADGES */
+
+.badge {
+  @apply rounded-full px-3 py-1 text-xs font-bold;
+}
+
+.badge-success {
+  @apply bg-emerald-100 text-emerald-800;
+}
+
+.badge-warning {
+  @apply bg-amber-100 text-amber-800;
+}
+
+.badge-danger {
+  @apply bg-red-100 text-red-800;
+}
+
+.badge-neutral {
+  @apply bg-stone-100 text-stone-700;
+}
+
+/* ICONS */
+
+.icon-box {
+  @apply flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm;
+}
+
+.icon-box-primary {
+  @apply text-emerald-900;
+}
+
+.icon-box-accent {
+  @apply bg-amber-300 text-emerald-950 shadow-lg shadow-black/10;
+}
+
+.icon-box-soft {
+  @apply bg-emerald-50 text-emerald-900;
+}
+
+/* COLORS */
+
+:root {
+
+    --bg-page: #f6f2eb;
+
+    --hero-bg: #183d36;
+
+    --primary: #064e3b;
+    --primary-hover: #065f46;
+
+    --accent: #fcd34d;
+
+    --surface: #ffffff;
+    --surface-alt: #fafaf9;
+
+    --text: #0c0a09;
+    --text-muted: #57534e;
+
+}
