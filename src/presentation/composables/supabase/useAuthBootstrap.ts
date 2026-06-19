@@ -14,11 +14,14 @@ export async function useAuthBootstrap() {
 
     onMounted(async () => {
         const { data: { session }, error } = await supabase.auth.getSession();
-        if (error || !session) {
-            errorStore.setNetworkError(error ?? new Error('Session unavailable'));
-            authStore.clearProfile();
-            router.push('/login');
+        if (error) {
+            errorStore.setNetworkError(error);
             return;
+        }
+
+        if(!session){
+            authStore.clearProfile()
+            return
         }
 
         try {
@@ -26,7 +29,7 @@ export async function useAuthBootstrap() {
             const profile = await getProfileByAuthId.execute(authId);
             authStore.setProfile(profile);
         } catch (error) {
-            errorStore.setError(error, 'unknown');
+            errorStore.setError(error, 'UNKNOWN');
             authStore.clearProfile();
             router.push('/login');
         }

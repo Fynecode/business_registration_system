@@ -1,3 +1,4 @@
+import { handleGetBusinessRequestsError } from "@/presentation/mappers/errors/businessRequest/businessRequest";
 import { getRequestByIdUseCase } from "@/services/business-request.services";
 
 export async function useGetRequestById(requestId: string | null) {
@@ -10,6 +11,6 @@ export async function useGetRequestById(requestId: string | null) {
         return request
     } catch (error) {
         console.error('Error fetching request by request ID:', error)
-        throw error
+        handleGetBusinessRequestsError(error, () => useGetRequestById(requestId))
     }
 }

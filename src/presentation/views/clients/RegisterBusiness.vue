@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { ListPlus, Building2, UserRound, Paperclip } from 'lucide-vue-next'
+import { ListPlus, Building2, UserRound, Paperclip, BadgeQuestionMark } from 'lucide-vue-next'
 import navbar from '@/components/navbar.vue'
 import SectionCard from '@/components/SectionCard.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
@@ -49,13 +49,10 @@ const businessTypeOptions: Array<{ label: string; value: businessType; descripti
 
 const requestForm = reactive({
   proposedNames: ['', '', ''] as [string, string, string],
-  email: authStore.profile?.email || '',
-  phone: authStore.profile?.phone || '',
+  email: '',
+  phone:  '',
   address: '',
   businessType: 'pty_ltd' as businessType,
-  clientName: [authStore.profile?.first_name, authStore.profile?.last_name].filter(Boolean).join(' '),
-  clientEmail: authStore.profile?.email || '',
-  clientPhone: authStore.profile?.phone || '',
 })
 
 const selectedBusinessType = computed(() =>
@@ -99,9 +96,6 @@ async function buildBusinessRequest() {
     email: requestForm.email,
     phone: requestForm.phone,
     documents: [] as Document[],
-    clientName: requestForm.clientName,
-    clientEmail: requestForm.clientEmail,
-    clientPhone: requestForm.clientPhone,
   }
 
   return await useCreateRequest(request, documentFiles.value)
@@ -215,62 +209,36 @@ function submitRequest() {
               </label>
             </div>
 
-            <TextareaField
+          </SectionCard>
+
+          <SectionCard>
+
+            <SectionHeader
+              :icon="BadgeQuestionMark"
+              kicker="Step 3"
+              title="Business contact details (optional)"
+            />
+
+            <div class="grid gap-5 sm:grid-cols-2">
+
+              <TextareaField
+              class="col-span-2"
               label="Business address"
               v-model="requestForm.address"
               placeholder="Street address, suburb, city"
               rows="4"
             />
 
-          </SectionCard>
-
-          <SectionCard>
-
-            <SectionHeader
-              :icon="UserRound"
-              kicker="Step 3"
-              title="Client and contact details"
-            />
-
-            <div class="grid gap-5 sm:grid-cols-2">
-
-              <TextField
-                class="sm:col-span-2"
-                label="Client name"
-                v-model="requestForm.clientName"
-                type="text"
-                required
-                autocomplete="name"
-              />
-
-              <TextField
-                label="Client email"
-                v-model="requestForm.clientEmail"
-                type="email"
-                required
-                autocomplete="email"
-              />
-
-              <TextField
-                label="Client phone"
-                v-model="requestForm.clientPhone"
-                type="tel"
-                required
-                autocomplete="tel"
-              />
-
               <TextField
                 label="Business email"
                 v-model="requestForm.email"
                 type="email"
-                required
               />
 
               <TextField
-                label="Business phone"
+                label="Business phone number"
                 v-model="requestForm.phone"
                 type="tel"
-                required
               />
             </div>
           </SectionCard>

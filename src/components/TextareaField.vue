@@ -13,7 +13,7 @@
 
 <template>
 
-    <div>
+    <div :class="$attrs.class">
 
         <label
             v-if="label"

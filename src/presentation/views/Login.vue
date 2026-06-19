@@ -6,10 +6,12 @@ import PrimaryBtn from '@/components/PrimaryBtn.vue'
 import { useLogin } from '@/presentation/composables/profile/useLogin'
 import { useSignUp } from '@/presentation/composables/profile/useSignUp'
 import { useRouter } from 'vue-router'
+import { useErrorStore } from '../stores/error.store'
 
 
 type AuthMode = 'login' | 'signup'
 
+const errorStore = useErrorStore()
 const mode = ref<AuthMode>('login')
 const router = useRouter()
 const activePromo = ref(0)
@@ -73,36 +75,41 @@ function previousPromo() {
 
 async function handleSubmit() {
   isLoading.value = true
+  errorStore.clearError()
   errorMsg.value = ''
   let profile
   if(mode.value === 'login'){
-    try{
-      profile = await useLogin(formData.email, formData.password)
-      if(profile.role === 'client'){
-        router.push('/client')
-      } else if(profile.role === 'admin' || profile.role === 'staff') {
-        router.push('/admin')
-      }
-    } catch(error){
-      console.error('An error has occcured', error)
-      errorMsg.value = 'Invalid email or password'
-    }
-  }else{
-    try{
-      profile = await useSignUp({email: formData.email, password: formData.password, first_name: formData.firstName, last_name: formData.lastName, phone: formData.phone, role: 'client'})
-      if(profile.role === 'client'){
-        router.push('/client')
-      } else if(profile.role === 'admin' || profile.role === 'staff') {
-        router.push('/admin')
-      }
-    } catch(error){
-      console.error('An error has occcured', error)
-      errorMsg.value = 'Failed to create account. Please try again.'
-    } finally {
+
+    profile = await useLogin(formData.email, formData.password)
+
+    if(errorStore.activeError){
+      errorMsg.value = errorStore.activeError.message
       isLoading.value = false
+      return
+    }
+
+    if(profile?.role === 'client'){
+      router.push('/client')
+    } else if(profile?.role === 'admin' || profile?.role === 'staff') {
+      router.push('/admin')
+    }
+
+  }else{
+    if(errorStore.activeError){
+      errorMsg.value = errorStore.activeError.message
+      isLoading.value = false
+      return
+    }
+
+    profile = await useSignUp({email: formData.email, password: formData.password, first_name: formData.firstName, last_name: formData.lastName, phone: formData.phone, role: 'client'})
+    if(profile?.role === 'client'){
+      router.push('/client')
+    } else if(profile?.role === 'admin' || profile?.role === 'staff') {
+      router.push('/admin')
     }
   }
 
+  isLoading.value = false
   return
 }
 

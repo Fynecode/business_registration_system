@@ -6,6 +6,7 @@
 
 <template>
     <section
+        :class="$attrs.class"
         v-bind="$attrs"
         class="rounded-[2rem] bg-white p-5 shadow-xl shadow-stone-300/40 sm:p-6"
     >

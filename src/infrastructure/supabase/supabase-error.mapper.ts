@@ -1,5 +1,5 @@
 import type { AppError } from "@/shared/errors/AppError";
-import { ValidationError, ConflictError, UnauthorizedError, ForbiddenError, NotFoundError } from "@/shared/errors/errors";
+import { ValidationError, ConflictError, UnauthorizedError, ForbiddenError, NotFoundError, RateLimitError, NetworkError } from "@/shared/errors/errors";
 
 export function mapSupabaseError(error: any): AppError{
     const rawMessage = error?.message ?? error?.error ?? "Unknown error"
@@ -60,6 +60,24 @@ export function mapSupabaseError(error: any): AppError{
         messageLower.includes("invalid")
     ) {
         return new ValidationError(message)
+    }
+
+    // Rate limiting
+    if(
+        status === 429 ||
+        messageLower.includes("rate limit") ||
+        messageLower.includes("too many requests")
+    ){
+        return new RateLimitError()
+    }
+
+    // Network
+    if(
+        messageLower.includes("failed to fetch") ||
+        messageLower.includes("networkerror") ||
+        messageLower.includes("network request failed")
+    ){
+        return new NetworkError()
     }
 
     // Fallback to validation error with original message

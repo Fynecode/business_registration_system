@@ -1,20 +1,23 @@
 import { defineStore } from "pinia"
 
 export type ErrorType =
-    | "network"
-    | "validation"
-    | "auth"
-    | "forbidden"
-    | "conflict"
-    | "not_found"
-    | "unknown"
+    | "NETWORK"
+    | "VALIDATION_ERROR"
+    | "UNAUTHORIZED"
+    | "FORBIDDEN"
+    | "CONFLICT"
+    | "NOT_FOUND"
+    | "UNKNOWN"
+    | "RATE_LIMIT"
 
 export interface ErrorPayload {
+    error: unknown
     message: string
     code?: string
     type: ErrorType
     timestamp: number
     retryable?: boolean
+    retry?: () => Promise<void>
 }
 
 interface ErrorState {
@@ -23,44 +26,71 @@ interface ErrorState {
     lastNetworkError: ErrorPayload | null
 }
 
+const MAX_RETRIES = 3
+
 export const useErrorStore = defineStore("error", {
     state: (): ErrorState => ({
-        activeError: null,
+        activeError: null as ErrorPayload | null,
         networkRetryAttempt: 0,
         lastNetworkError: null,
     }),
     getters: {
         hasError: (state) => !!state.activeError,
         errorMessage: (state) => state.activeError?.message ?? "",
-        isNetworkError: (state) => state.activeError?.type === "network",
+        isNetworkError: (state) => state.activeError?.type === "NETWORK",
     },
     actions: {
-        setError(error: unknown, type: ErrorType = "unknown", retryable = false) {
-            const message = String(
-                (error as any)?.message ?? (error as any)?.error ?? error ?? "Unknown error"
-            )
-            const code = String((error as any)?.code ?? "") || undefined
-
-            const payload: ErrorPayload = {
-                message,
-                code,
+        setError(error: unknown, type: ErrorType, options?: {message?: string, retryable?: boolean, retry?: () => Promise<void>}) {
+            const message = options?.message ?? (error instanceof Error? error.message : "An unexpected error has occured")
+            
+            this.activeError = {
+                error,
                 type,
-                retryable,
-                timestamp: Date.now(),
+                message,
+                retryable : options?.retryable ?? false,
+                retry: options?.retry,
+                timestamp: Date.now()
+            }
+            
+        },
+
+        async retry(){
+            if(!this.activeError?.retryable || !this.activeError?.retry){
+                return
             }
 
-            this.activeError = payload
-            if (type === "network") {
-                this.lastNetworkError = payload
+            if(this.networkRetryAttempt >= MAX_RETRIES){
+                return
+            }
+
+            this.incrementRetry()
+
+            try {
+                await this.activeError.retry()
+
+                this.clearError()
+
+                this.resetRetry()
+            } catch (error) {
+                this.setError(
+                    error,
+                    this.activeError.type,
+                    {
+                        retryable: true,
+                        retry: this.activeError.retry
+
+                    }
+                )
             }
         },
+
         clearError() {
             this.activeError = null
             this.lastNetworkError = null
             this.networkRetryAttempt = 0
         },
         setNetworkError(error: unknown, retryable = true) {
-            this.setError(error, "network", retryable)
+            this.setError(error, "NETWORK", {retryable})
         },
         incrementRetry() {
             this.networkRetryAttempt += 1

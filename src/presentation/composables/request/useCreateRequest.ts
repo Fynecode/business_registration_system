@@ -1,6 +1,7 @@
 import { createBusinessRequestUseCase } from "@/services/business-request.services";
 import { uploadDocumentsUseCase } from "@/services/documents.services";
 import type { CreateBusinessRequestInput } from "@/domain/businessRequest/business.request.repository";
+import { handleCreateBusinessRequestError } from "@/presentation/mappers/errors/businessRequest/businessRequest";
 
 export async function useCreateRequest(requestData: CreateBusinessRequestInput, documents: File[]) {
     try {
@@ -19,6 +20,6 @@ export async function useCreateRequest(requestData: CreateBusinessRequestInput, 
         return request
     } catch (error) {
         console.error('Error creating request:', error)
-        throw error
+        handleCreateBusinessRequestError(error, () => useCreateRequest(requestData, documents))
     }
 }
