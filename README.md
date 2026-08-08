@@ -275,4 +275,4 @@ For questions or issues, please open a GitHub issue or contact the maintainer.
 ---
 
 **Built with ❤️ using Vue 3 + TypeScript + Supabase**  
-**Last Updated:** 2025
+**Last Updated:** 2026
