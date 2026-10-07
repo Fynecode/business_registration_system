@@ -86,11 +86,42 @@ export class SupabaseProfileRepository implements ProfileRepository {
         }
     }
 
-    async updateAuthEmail(email: string): Promise<void> {
-        const { error} = await supabase.auth.updateUser({email: email})
+    async requestPasswordReset(email: string): Promise<void> {
+        const {error} = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.origin}/reset-password`
+        })
+
         if (error) {
             throw mapSupabaseError(error)
         }
+    }
+
+    async changePassword(password: string): Promise<void> {
+        const {error} = await supabase.auth.updateUser({password: password})
+
+        if(error){
+            throw mapSupabaseError(error)
+        }
+    }
+
+    async changeEmail(email: string): Promise<Profile | null> {
+        let profile = await this.getByEmail(email)
+
+        if(!profile){
+            throw new Error('Profile not found')
+        }
+
+        profile.email = email
+
+        const {error} = await supabase.auth.updateUser({email: email})
+
+        if(error){
+            throw mapSupabaseError(error)
+        }
+        
+        const updatedProfile = this.update(profile?.id, profile)
+
+        return updatedProfile
     }
 
     async login(email: string, password: string): Promise<Profile | null> {

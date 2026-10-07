@@ -4,6 +4,8 @@ import { useRouter } from 'vue-router'
 import navbar from '@/components/navbar.vue'
 import { useAuthStore } from '@/presentation/stores/auth.store'
 import { useUpdateProfile } from '@/presentation/composables/profile/useUpdateProfile'
+import { useUpdateClient } from '@/presentation/composables/client/useUpdateProfile'
+import { useDeleteProfile } from '@/presentation/composables/profile/useDeleteProfile'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -14,33 +16,33 @@ const deletePassword = ref('')
 const deleteError = ref('')
 
 const updateForm = reactive({
-  first_name: '',
-  last_name: '',
+  firstname: '',
+  lastname: '',
   email: '',
   phone: '',
 })
 
 const profile = computed(() => authStore.profile)
 const displayName = computed(() => {
-  const fullName = [profile.value?.first_name, profile.value?.last_name].filter(Boolean).join(' ')
+  const fullName = [profile.value?.firstname, profile.value?.lastname].filter(Boolean).join(' ')
   return fullName || 'Client profile'
 })
 const initials = computed(() => {
-  const first = profile.value?.first_name?.charAt(0) || 'C'
-  const last = profile.value?.last_name?.charAt(0) || ''
+  const first = profile.value?.firstname?.charAt(0) || 'C'
+  const last = profile.value?.lastname?.charAt(0) || ''
   return `${first}${last}`.toUpperCase()
 })
 
 const profileDetails = computed(() => [
-  { label: 'First name', value: profile.value?.first_name || 'Not provided', icon: 'user' },
-  { label: 'Last name', value: profile.value?.last_name || 'Not provided', icon: 'user' },
+  { label: 'First name', value: profile.value?.firstname || 'Not provided', icon: 'user' },
+  { label: 'Last name', value: profile.value?.lastname || 'Not provided', icon: 'user' },
   { label: 'Email address', value: profile.value?.email || 'Not provided', icon: 'mail' },
   { label: 'Phone number', value: profile.value?.phone || 'Not provided', icon: 'phone' },
 ])
 
 function openUpdateModal() {
-  updateForm.first_name = profile.value?.first_name || ''
-  updateForm.last_name = profile.value?.last_name || ''
+  updateForm.firstname = profile.value?.firstname || ''
+  updateForm.lastname = profile.value?.lastname || ''
   updateForm.email = profile.value?.email || ''
   updateForm.phone = profile.value?.phone || ''
   showUpdateModal.value = true
@@ -55,14 +57,25 @@ async function saveProfile() {
     return
   }
 
+  if(profile.value?.role === 'client') {
+    const updatedProfile = await useUpdateClient({
+      firstname: updateForm.firstname.trim(),
+      lastname: updateForm.lastname.trim(),
+      phone: updateForm.phone.trim(),
+    })
+
+    authStore.setProfile(updatedProfile)
+    showUpdateModal.value = false
+    return
+  }
+
   const updatedProfile = await useUpdateProfile({
-    first_name: updateForm.first_name.trim(),
-    last_name: updateForm.last_name.trim(),
+    firstname: updateForm.firstname.trim(),
+    lastname: updateForm.lastname.trim(),
     email: updateForm.email.trim(),
     phone: updateForm.phone.trim(),
   })
 
-  authStore.setProfile(updatedProfile)
   showUpdateModal.value = false
 }
 
@@ -78,20 +91,15 @@ function closeDeleteModal() {
   deleteError.value = ''
 }
 
-function deleteProfile() {
-  if (!deletePassword.value.trim()) {
-    deleteError.value = 'Enter your password to delete this profile.'
-    return
+async function deleteProfile() {
+  try {
+    await useDeleteProfile()
+    showDeleteModal.value = false
+    router.push('/')
+  } catch (error) {
+    deleteError.value = 'Failed to delete'
   }
-
-  if (profile.value?.password && deletePassword.value !== profile.value.password) {
-    deleteError.value = 'The password you entered does not match this profile.'
-    return
-  }
-
-  authStore.clearProfile()
-  showDeleteModal.value = false
-  router.push('/login')
+  
 }
 </script>
 
@@ -190,7 +198,7 @@ function deleteProfile() {
             <label for="first-name" class="text-sm font-semibold text-stone-700">First name</label>
             <input
               id="first-name"
-              v-model="updateForm.first_name"
+              v-model="updateForm.firstname"
               type="text"
               autocomplete="given-name"
               required
@@ -202,7 +210,7 @@ function deleteProfile() {
             <label for="last-name" class="text-sm font-semibold text-stone-700">Last name</label>
             <input
               id="last-name"
-              v-model="updateForm.last_name"
+              v-model="updateForm.lastname"
               type="text"
               autocomplete="family-name"
               required
@@ -260,9 +268,6 @@ function deleteProfile() {
           <div>
             <p class="text-sm font-bold uppercase text-red-700">Confirm deletion</p>
             <h2 class="mt-1 text-2xl font-bold text-stone-950">Delete this profile?</h2>
-            <p class="mt-2 text-sm leading-6 text-stone-500">
-              Enter your password to confirm. This will clear your saved profile and sign you out.
-            </p>
           </div>
           <button
             type="button"
@@ -273,16 +278,6 @@ function deleteProfile() {
             <icon-lucide-x class="h-5 w-5" />
           </button>
         </div>
-
-        <label for="delete-password" class="text-sm font-semibold text-stone-700">Password</label>
-        <input
-          id="delete-password"
-          v-model="deletePassword"
-          type="password"
-          autocomplete="current-password"
-          class="mt-2 block w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm outline-none transition focus:border-red-600 focus:bg-white focus:ring-4 focus:ring-red-100"
-          placeholder="Enter your password"
-        />
 
         <p v-if="deleteError" class="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
           {{ deleteError }}

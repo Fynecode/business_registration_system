@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useLogout } from '@/presentation/composables/useLogout'
+import { useLogout } from '@/presentation/composables/auth/useLogout'
+import { useAuthStore } from '@/presentation/stores/auth.store'
 
 const isOpen = ref(false)
 const route = useRoute()
+const profile = useAuthStore().profile
 
 const isActive = (path: string) => route.path === path || route.path.startsWith(path + '/')
 const isExactActive = (path: string) => route.path === path
@@ -44,13 +46,13 @@ function toggleNav() {
       <ul class="flex flex-1 flex-col gap-2">
         <li>
           <router-link
-            to="/client"
+            :to="profile?.role === 'client' ? '/client' : '/admin'"
             class="group flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold text-emerald-50/80 transition hover:bg-white/10 hover:text-white"
           >
             <span
               :class="[
                 'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition',
-                isExactActive('/client') ? 'bg-white text-emerald-950 shadow-lg shadow-black/10' : 'bg-white/10 text-amber-100 group-hover:bg-white/15',
+                isExactActive('/client') || isExactActive('/admin') ? 'bg-white text-emerald-950 shadow-lg shadow-black/10' : 'bg-white/10 text-amber-100 group-hover:bg-white/15',
               ]"
             >
               <icon-lucide-layout-dashboard class="h-5 w-5" />
@@ -59,7 +61,7 @@ function toggleNav() {
           </router-link>
         </li>
 
-        <li>
+        <li v-if="profile?.role === 'client'">
           <router-link
             to="/client/register"
             class="group flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold text-emerald-50/80 transition hover:bg-white/10 hover:text-white"
@@ -76,7 +78,7 @@ function toggleNav() {
           </router-link>
         </li>
 
-        <li>
+        <li v-if="profile?.role === 'client'">
           <router-link
             to="/client"
             class="group flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold text-emerald-50/80 transition hover:bg-white/10 hover:text-white"
@@ -85,6 +87,18 @@ function toggleNav() {
               <icon-lucide-receipt-text class="h-5 w-5" />
             </span>
             <span v-if="isOpen" class="truncate">Bookkeeping</span>
+          </router-link>
+        </li>
+
+        <li v-if="profile?.role === 'admin' || profile?.role === 'staff'">
+          <router-link
+            to="/client"
+            class="group flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold text-emerald-50/80 transition hover:bg-white/10 hover:text-white"
+          >
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-amber-100 transition group-hover:bg-white/15">
+              <icon-lucide-users class="h-5 w-5" />
+            </span>
+            <span v-if="isOpen" class="truncate">Clients</span>
           </router-link>
         </li>
 
@@ -119,7 +133,7 @@ function toggleNav() {
 
         <router-link
           @click="useLogout()"
-          to="/login"
+          to="/"
           class="group flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold text-red-100 transition hover:bg-red-500/10"
         >
           <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-400/15 text-red-200 transition group-hover:bg-red-400/25">

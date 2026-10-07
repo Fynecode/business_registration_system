@@ -9,6 +9,12 @@ export interface ProfileRepository {
 
     login(email: string, password: string): Promise<Profile | null>
 
+    changePassword(password: string): Promise<void>
+
+    changeEmail(email: string): Promise<Profile | null>
+
+    requestPasswordReset(email: string): Promise<void>
+
     getByAuthId(authId: string): Promise<Profile | null>
 
     getById(id: string): Promise<Profile | null>

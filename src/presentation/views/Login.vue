@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref, reactive } from 'vue'
 import TextField from '@/components/TextField.vue'
 import PrimaryBtn from '@/components/PrimaryBtn.vue'
 
-import { useLogin } from '@/presentation/composables/profile/useLogin'
+import { useLogin } from '@/presentation/composables/auth/useLogin'
 import { useSignUp } from '@/presentation/composables/profile/useSignUp'
 import { useRouter } from 'vue-router'
 import { useErrorStore } from '../stores/error.store'
@@ -80,7 +80,9 @@ async function handleSubmit() {
   let profile
   if(mode.value === 'login'){
 
-    profile = await useLogin(formData.email, formData.password)
+    profile = await useLogin({email: formData.email, password: formData.password})
+
+    console.log(profile)
 
     if(errorStore.activeError){
       errorMsg.value = errorStore.activeError.message
@@ -101,11 +103,9 @@ async function handleSubmit() {
       return
     }
 
-    profile = await useSignUp({email: formData.email, password: formData.password, first_name: formData.firstName, last_name: formData.lastName, phone: formData.phone, role: 'client'})
+    profile = await useSignUp({email: formData.email, password: formData.password, firstname: formData.firstName, lastname: formData.lastName, phone: formData.phone, role: 'client'})
     if(profile?.role === 'client'){
       router.push('/client')
-    } else if(profile?.role === 'admin' || profile?.role === 'staff') {
-      router.push('/admin')
     }
   }
 
@@ -220,9 +220,9 @@ onBeforeUnmount(() => {
           <div>
             <div class="flex items-center justify-between gap-3">
               <label for="password" class="text-sm font-semibold text-stone-700">Password</label>
-              <button v-if="mode === 'login'" type="button" class="text-sm font-semibold text-emerald-800 hover:text-emerald-950">
+              <Router-link to="/forgot-password" v-if="mode === 'login'" class="text-sm font-semibold text-emerald-800 hover:text-emerald-950">
                 Forgot password?
-              </button>
+              </Router-link>
             </div>
             <input
               id="password"
@@ -275,20 +275,20 @@ onBeforeUnmount(() => {
         <div class="flex h-full flex-col justify-center pt-24">
           <div class="mb-10 grid grid-cols-[auto_1fr] gap-5">
             <div class="flex h-16 w-16 items-center justify-center rounded-3xl bg-amber-300 text-emerald-950 shadow-xl shadow-black/20">
-              <icon-lucide-building-2 v-if="currentPromo.icon === 'registration'" class="h-8 w-8" />
-              <icon-lucide-receipt-text v-else-if="currentPromo.icon === 'bookkeeping'" class="h-8 w-8" />
+              <icon-lucide-building-2 v-if="currentPromo?.icon === 'registration'" class="h-8 w-8" />
+              <icon-lucide-receipt-text v-else-if="currentPromo?.icon === 'bookkeeping'" class="h-8 w-8" />
               <icon-lucide-handshake v-else class="h-8 w-8" />
             </div>
             <div class="pt-1">
-              <p class="text-sm font-bold uppercase text-amber-200">{{ currentPromo.kicker }}</p>
-              <p class="max-w-xl text-lg leading-8 text-emerald-50/85">{{ currentPromo.body }}</p>
+              <p class="text-sm font-bold uppercase text-amber-200">{{ currentPromo?.kicker }}</p>
+              <p class="max-w-xl text-lg leading-8 text-emerald-50/85">{{ currentPromo?.body }}</p>
             </div>
           </div>
 
           <div class="mt-12 grid grid-cols-[0.55fr_1fr] gap-5">
             <div class="rounded-[1.5rem] border border-white/15 bg-white/10 p-6 backdrop-blur">
-              <p class="text-5xl font-bold text-amber-200">{{ currentPromo.metric }}</p>
-              <p class="mt-3 text-sm font-semibold text-emerald-50/80">{{ currentPromo.metricLabel }}</p>
+              <p class="text-5xl font-bold text-amber-200">{{ currentPromo?.metric }}</p>
+              <p class="mt-3 text-sm font-semibold text-emerald-50/80">{{ currentPromo?.metricLabel }}</p>
             </div>
             <div class="rounded-[1.5rem] border border-white/15 bg-white/10 p-6 backdrop-blur">
               <div class="mb-5 flex items-center gap-3">

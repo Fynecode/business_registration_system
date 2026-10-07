@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:http": "tsx watch src/http/index.ts",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
@@ -15,6 +16,8 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.106.2",
     "cloudinary": "^2.10.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "lucide-vue-next": "^1.0.0",
     "multer": "^2.1.1",
     "pinia": "^3.0.4",
@@ -29,6 +32,8 @@
     "@iconify-json/lucide": "^1.2.104",
     "@tailwindcss/vite": "^4.2.4",
     "@tsconfig/node24": "^24.0.4",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/jsdom": "^28.0.1",
     "@types/node": "^24.12.2",
     "@vitejs/plugin-vue": "^6.0.6",
@@ -40,6 +45,7 @@
     "oxlint": "~1.60.0",
     "prettier": "3.8.3",
     "tailwindcss": "^4.2.4",
+    "tsx": "^4.23.13",
     "typescript": "~6.0.0",
     "unplugin-auto-import": "^21.0.0",
     "unplugin-icons": "^23.0.1",

@@ -47,7 +47,7 @@ const requestsLoading = ref(false)
 const requestsError = ref('')
 
 const businesses = computed(() => (authStore.profile as any)?.businesses ?? [])
-const firstName = computed(() => authStore.profile?.first_name || 'there')
+const firstName = computed(() => authStore.profile?.firstname || 'there')
 const hasBusinesses = computed(() => businesses.value.length > 0)
 const visibleRequests = computed(() => businessRequests.value.filter((request) => request.status !== 'registered'))
 const hasVisibleRequests = computed(() => visibleRequests.value.length > 0)

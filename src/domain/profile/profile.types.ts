@@ -2,11 +2,11 @@ export type Role = 'admin' | 'staff' | 'client' | 'editor'
 
 export interface Profile {
     id: string
-    authId?: string
+    profileId: string
+    createdAt: string | Date
     email: string
     phone: string
-    first_name: string
-    last_name: string
-    password?: string
-    role: Role
+    firstname: string
+    lastname: string
+    role?: Role
 }

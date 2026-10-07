@@ -9,6 +9,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './presentation/router'
 import Toast, {type PluginOptions } from 'vue-toastification'
+import { useAuthBootstrap } from './presentation/composables/auth/useAuthBootstrap'
 
 const options: PluginOptions = {
     position: 'top-right',
@@ -20,6 +21,7 @@ const options: PluginOptions = {
 }
 
 const app = createApp(App)
+
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 
@@ -28,5 +30,7 @@ app.use(pinia)
 app.use(router)
 
 app.use(Toast, options)
+
+await useAuthBootstrap()
 
 app.mount('#app')

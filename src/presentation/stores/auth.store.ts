@@ -24,6 +24,7 @@ export const useAuthStore = defineStore("auth", {
         clearProfile() {
             this.profile = null;
             this.loaded = false;
+            console.log('Clearing profile...')
         },
     },
 

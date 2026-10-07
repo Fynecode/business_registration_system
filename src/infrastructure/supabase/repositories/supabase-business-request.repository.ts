@@ -141,6 +141,8 @@ export class SupabaseBusinessRequestRepository implements BusinessRequestReposit
         if (error) {
             throw mapSupabaseError(error)
         }
+
+        console.log(data)
         return mapRows(data as BusinessRequestRow[])
     }
 

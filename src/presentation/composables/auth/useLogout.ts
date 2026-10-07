@@ -8,5 +8,5 @@ export async function useLogout() {
 
     await supabase.auth.signOut();
     authStore.clearProfile();
-    router.push('/login');
+    router.push('/');
 }

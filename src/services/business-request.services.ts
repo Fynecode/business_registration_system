@@ -1,4 +1,5 @@
 import { SupabaseBusinessRequestRepository } from "@/infrastructure/supabase/repositories/supabase-business-request.repository";
+import { SupabaseProfileRepository } from "@/infrastructure/supabase/repositories/supabase-profile.repository";
 import { CreateBusinessRequestUseCase } from "@/application/businessRequest/create-request.use-case";
 import { GetRequestByIdUseCase } from "@/application/businessRequest/get-request-by-id.use-case";
 import { GetRequestByClientIdUseCase } from "@/application/businessRequest/get-request-by-client-id.use-case";
@@ -13,8 +14,10 @@ import { RejectRequestUseCase } from "@/application/businessRequest/reject-reque
 import { AssignRequestReviewerUseCase } from "@/application/businessRequest/assign-request-reviewer.use-case";
 import { SubmitRequestUseCase } from "@/application/businessRequest/submit-request.use-case";
 import { UpdateRequestUseCase } from "@/application/businessRequest/update-request.use-case";
+import { GetRegistrationRequestDetailsUseCase } from "@/application/businessRequest/get-request-details.use-case";
 
 const businessRequestRepository = new SupabaseBusinessRequestRepository()
+const profileRepository = new SupabaseProfileRepository()
 
 export const createBusinessRequestUseCase = new CreateBusinessRequestUseCase(businessRequestRepository)
 
@@ -43,3 +46,5 @@ export const assignRequestReviewerUseCase = new AssignRequestReviewerUseCase(bus
 export const submitRequestUseCase = new SubmitRequestUseCase(businessRequestRepository)
 
 export const updateRequestUseCase = new UpdateRequestUseCase(businessRequestRepository)
+
+export const getBusinessRequestDetailsUseCase = new GetRegistrationRequestDetailsUseCase(businessRequestRepository, profileRepository)

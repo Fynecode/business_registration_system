@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { ListPlus, Building2, UserRound, Paperclip, BadgeQuestionMark } from 'lucide-vue-next'
+import { ListPlus, Building2, Paperclip, BadgeQuestionMark } from 'lucide-vue-next'
 import navbar from '@/components/navbar.vue'
 import SectionCard from '@/components/SectionCard.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
@@ -78,7 +78,7 @@ function handleDocumentUpload(event: Event) {
   documentNames.value = documentFiles.value.map((file) => file.name)
 }
 
-async function buildBusinessRequest() {
+async function submitRequest() {
   const status: 'draft' | 'submitted' | 'in_review' | 'approved' | 'rejected' | 'registered' = 'draft'
 
   requestForm.proposedNames
@@ -101,12 +101,6 @@ async function buildBusinessRequest() {
   return await useCreateRequest(request, documentFiles.value)
 }
 
-function submitRequest() {
-  const payload = buildBusinessRequest()
-
-  submissionMessage.value = 'Request form is ready. Connect your submission function here.'
-  console.log('Business request payload:', payload)
-}
 </script>
 
 <template>
